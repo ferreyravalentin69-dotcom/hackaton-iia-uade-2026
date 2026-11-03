@@ -44,28 +44,28 @@ Salida: El sistema devuelve un "SÍ" (Boxes) o "NO" (Stay Out) inmediato, priori
 
 | | Predice SÍ | Predice NO |
 |---|---|---|
-| **Real SÍ** | VP = <> | FN = <> |
-| **Real NO** | FP = <> | VN = <> |
+| **Real SÍ** | VP = <4> | FN = <0> |
+| **Real NO** | FP = <2> | VN = <8> |
 
 **Prueba (casos 15–20)**
 
 | | Predice SÍ | Predice NO |
 |---|---|---|
-| **Real SÍ** | VP = <> | FN = <> |
-| **Real NO** | FP = <> | VN = <> |
+| **Real SÍ** | VP = <1> | FN = <3> |
+| **Real NO** | FP = <0> | VN = <2> |
 
 | Métrica | Entrenamiento | Prueba |
 |---|---|---|
-| Exactitud | <> | <> |
-| Precisión | <> | <> |
-| Sensibilidad | <> | <> |
-| Especificidad | <> | <> |
+| Exactitud | <12/14=85.7%> | <3/6=50%> |
+| Precisión | <4/(4+2)=66.7%> | <1/(1+0)=100%> |
+| Sensibilidad | <4/(4+0)=100%> | <1(1+3)=25.0%> |
+| Especificidad | <8/(8+2)=80.0%> | <2/(2+0)=100%> |
 
-**Entrenamiento contra prueba.** <¿Hay diferencia? ¿Por qué? ¿Sobreajuste o generalización?>
+**Entrenamiento contra prueba.** <En el entrenamiento, el sistema fue perfecto detectando cuándo SÍ parar (Sensibilidad 100%), y su único error fue ser un poco optimista en los casos 3 y 13 (Falsos Positivos por la Regla 6).Sin embargo, en la prueba el sistema falló catastróficamente en sensibilidad (25%). ¿Por qué? Porque la Regla 1 (Si Distancia > 3.0, NO parar) es demasiado estricta. En los casos de prueba 16, 17 y 19, el auto de adelante estaba a más de 3 segundos (3.1, 3.6 y 3.3), pero la degradación era altísima (5.4, 4.3 y 5.5) y las paradas muy rápidas (2.1, 2.5, 3.6). El resultado real fue SÍ (undercut exitoso).El sistema entrenó con casos donde distancia > 3.0 siempre era NO, pero la realidad (prueba) demostró que si la degradación es brutal (ej. 5.4), un undercut a 3.1 segundos puede funcionar.>
 
 ## 4. El error más caro
 
-<¿Es peor el falso positivo o el falso negativo en su problema? ¿Por qué, según la ficha? ¿Qué cambiaron en el sistema para cometer menos ese error?>
+<En este problema, el Falso Positivo (FP) es el error más caro. Según la ficha, un FP implica "parar y no ganar la posición: se pierde tiempo y quedás atrás de autos lentos". En la Fórmula 1, entrar a boxes y salir en tráfico es letal: el auto queda atrapado detrás de rivales más lentos, los neumáticos nuevos se degradan por el aire sucio y se pierde la ventaja estratégica.Si bien el Falso Negativo (FN) es también un error grave ("el rival para primero y te pasa"), este deja al auto en pista libre, con la posibilidad de defender la posición o de hacer una parada tardía. El FP, en cambio, sentencia la carrera al auto encerrado en el tráfico, arruinando la estrategia por completo. Para mitigar los Falsos Positivos, hicimos tres ajustes clave en las reglas Si-Entonces:Endurecimos los umbrales de activación: Las reglas de parada ahora exigen una degradación más alta y una distancia más corta para mandar al auto a boxes (evitando los casos 3 y 13 que daban FP).Prioridad absoluta a la distancia: Si la distancia con el auto de adelante es mayor a 3.0s, la Regla 1 bloquea cualquier parada, sin importar la degradación o la velocidad de la parada. Esto evita el riesgo de salir en tráfico.Ignorar el sesgo de las paradas rápidas: Eliminamos la "Duración de la parada" como variable de decisión directa. El sistema ahora se enfoca en el contexto de carrera (distancia y degradación) en lugar de dejarse tentar por una parada rápida de 2.0s que podría terminar en un FP.>
 
 ## 5. ¿Comparado contra qué?
 
