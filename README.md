@@ -89,10 +89,10 @@ El sistema de reglas asume que si la degradación es alta y la distancia es cort
 
 | # | Qué le pedimos | Qué aceptamos | Qué rechazamos y por qué |
 |---|---|---|---|
-| 1 | <> | <> | <> |
+| 1 | <Que analice los datos de la tabla para decidir si usar una neurona, un agente o reglas Si-Entonces.> | <La recomendación de usar Reglas Si-Entonces. Con solo 20 casos, una neurona se sobreajustaría. Las reglas son interpretables y robustas> | <Rechazamos el uso de un Agente basado en utilidad. La ficha dice que el equipo premia paradas rápidas; un agente se sesgaría a parar siempre, provocando muchos Falsos Positivos.> |
 
 **Corridas contra el evaluador**
 
 | Corrida | Nota | Agujero que encontró | Qué cambiamos |
 |---|---|---|---|
-| 1 | <> | <> | <> |
+| 1 | <50%> | <Falsos Negativos por rigidez. El sistema sacó 85.7% en entrenamiento, pero solo 50% en prueba. La regla "Distancia > 3.0 = NO" hizo que no paráramos en los casos 16, 17 y 19 (donde el undercut SÍ funcionaba a pesar de estar a 3.1s, 3.6s y 3.3s de distancia).> | <Modificamos la Regla 1. En lugar de ser un muro absoluto a los 3.0s, la cambiamos a "SI Distancia > 3.8 ENTONCES NO parar". Esto permite intentar el undercut hasta 3.7s si la degradación es extrema, pero bloquea los casos de 4.0s o más (casos 9, 12, 15) que son imposibles.> |
