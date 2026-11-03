@@ -73,14 +73,15 @@ Salida: El sistema devuelve un "SÍ" (Boxes) o "NO" (Stay Out) inmediato, priori
 
 | Checklist (Clase 6) | Respuesta |
 |---|---|
-| ¿Qué datos? | <> |
-| ¿Qué métrica? | <> |
-| ¿Comparado contra qué? | <> |
-| ¿Quién lo midió? | <> |
+| ¿Qué datos? | <Datos de telemetría de 20 vueltas de F1 (14 de entrenamiento, 6 de prueba). Variables: Degradación del neumático (décimas/vuelta), Distancia al auto de adelante (s), Vueltas restantes, Duración de la parada (s) y Resultado real (1=SÍ, 0=NO).> |
+| ¿Qué métrica? | <Exactitud (Accuracy), Precisión, Sensibilidad (Recall) y Especificidad. Se elige Exactitud como métrica principal para comparar contra la línea base, y Sensibilidad para medir qué tanto detecta las oportunidades de undercut reales.> |
+| ¿Comparado contra qué? | <Contra una línea base trivial que siempre predice la clase mayoritaria ("NO parar"). En entrenamiento la base saca 71.4% y en prueba 33.3%. Nuestro sistema saca 85.7% y 50.0% respectivamente.> |
+| ¿Quién lo midió? | <El equipo de la hackathon (nosotros), utilizando una validación empírica: el sistema se calibró con los 14 casos de entrenamiento y se evaluó a ciegas con los 6 casos de prueba, calculando las matrices de confusión de forma manual/script en base a las reglas definidas.> |
 
 ## 6. Riesgo: el camino completo
 
-<Datos → modelo → decisión → consecuencia aplicado a su caso. Al menos un riesgo concreto.>
+<Datos (Captura): La telemetría nos dice que la degradación es de 3.8 décimas/vuelta y el piloto está a 2.9 segundos del auto de adelante.Riesgo concreto: Ruido o retraso en el dato. El sensor de degradación puede verse afectado por el tipo de asfalto o la temperatura, o el sistema de cronometraje puede tener un lag de 1 segundo. Si el dato de distancia dice 2.9s pero en realidad es 3.2s, todo el sistema falla.Modelo (Regla Si-Entonces): Nuestra regla evalúa: SI Degradación > 2.5 Y Distancia < 3.0 ENTONCES SÍ. El sistema procesa los datos y dictamina "SÍ PARAR".Riesgo concreto: Rigidez de los umbrales (Fragilidad). El modelo no "entiende" el contexto, solo compara números. Si el piloto de adelante está sufriendo un problema mecánico y va lento, la regla no lo sabe y lo manda a boxes igual.Decisión (El Ingeniero y el Piloto): El ingeniero recibe el "SÍ" del sistema y llama por radio: "Box, box, box". El piloto entra a pits.Riesgo concreto: El sesgo humano o el error de ejecución. El equipo premia las paradas rápidas, así que el mecánico arriesga de más. El piloto puede pasarse de largo del pit-lane (speeding) o el cambio de neumático tarda 5 segundos por un problema con la pistola neumática.Consecuencia: El piloto sale a pista, pero el auto de adelante ya pasó la línea de boxes y viene lanzado. Nuestro piloto queda atrapado detrás de un Williams lento que venía doblado.Riesgo concreto: El Falso Positivo (FP) materializado. Perdimos la posición, destruimos la estrategia y el piloto queda enojado por radio. "El Riesgo del Dato Estático (Falta de contexto dinámico)".
+El sistema de reglas asume que si la degradación es alta y la distancia es corta, la parada funcionará. Pero el sistema no sabe qué está pasando en el tráfico ni qué neumático puso el rival. Si el rival de adelante para en la vuelta siguiente (under-cut invertido) o si hay un Safety Car (que anula la ventaja de la parada), nuestra regla Si-Entonces fallará catastróficamente. La regla no puede predecir el futuro de la carrera, solo evalúa el presente estático. Para que el riesgo no arruine la carrera, el sistema incluye un "botón de emergencia" (Human-in-the-loop): aunque la regla diga SÍ, el ingeniero de estrategia tiene la última palabra. Si el ingeniero ve por los monitores que hay tráfico pesado, o que viene un Safety Car, puede ignorar la recomendación del sistema. El sistema propone, el humano dispone.>
 
 ## 7. Bitácora
 
