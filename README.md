@@ -1,24 +1,24 @@
-# <Código> · <Título de su problemática>
+# <T27> · <¿Paramos en boxes en esta vuelta?>
 
 > **Hackatón IIA · UADE · 3.4.257.** Este README es la plantilla del grupo. En su fork, reemplacen todo lo que está entre `< >` y borren esta nota. Las bases están en `BASES.md` y su ficha en `problematicas/`.
 
-**Integrantes:** <nombre y apellido> · <nombre y apellido>
-**IA declarada:** <la del grupo desde la Clase 1>
-**Pista:** <Neurona / Reglas / Agente>
+**Integrantes:** <Valentin Ferreyra Gutierrez> 
+**IA declarada:** <claude>
+**Pista:** <Reglas>
 **Publicación en LinkedIn:** <link>
 
 ---
 
 ## 1. Formulación y PEAS
 
-**La pregunta.** <Para cada caso, ¿…? SÍ significa: …>
+**La pregunta.** <Para cada caso, ¿SÍ o NO? SÍ = parar en esta vuelta hace ganar la posición al auto de adelante.>
 
 | PEAS | Su sistema |
 |---|---|
-| Medida de rendimiento | <cómo se sabe si decidió bien> |
-| Entorno | <dónde y con qué decide> |
-| Actuadores | <qué hace con la decisión> |
-| Sensores | <qué datos recibe> |
+| Medida de rendimiento | <Maximizar las posiciones ganadas (undercuts exitosos) minimizando el riesgo de falsos positivos (perder tiempo detrás de autos lentos) y falsos negativos (que el rival te pase).> |
+| Entorno | <El circuito de Fórmula 1.> |
+| Actuadores | < El auto de F1 (motor, neumáticos, caja de cambios) y la comunicación por radio al piloto.> |
+| Sensores | <Telemetría del auto (degradación de neumáticos), sistemas de cronometraje (distancia con el rival) y datos de estrategia (vueltas restantes).> |
 
 **Objetivo y métrica.** <Qué es lo que de verdad importa en su problema y con qué métrica lo van a medir. ¿Son lo mismo?>
 
